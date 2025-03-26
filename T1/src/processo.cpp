@@ -1,6 +1,7 @@
 #include <iostream>
 #include <queue>
 #include <unistd.h>
+#include <algorithm>
 
 struct Processo
 {
