@@ -11,9 +11,9 @@ int main(){
     processos.push_back(processo3);
     Escalonador escalonador;
     escalonador.escalonar(processos);
-    for (const auto& p : processos) {
-        std::cout<<p.id<<std::endl;
-    }
+    // for (const auto& p : processos) {
+    //     std::cout<<p.id<<std::endl;
+    // }
     //processo1.processo_info();
 
 }

@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <queue>
-#include "../src/processo.cpp"  
+#include "processo.hpp"  
 
 class Escalonador {
 public:
