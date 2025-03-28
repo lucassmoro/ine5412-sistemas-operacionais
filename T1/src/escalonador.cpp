@@ -1,19 +1,16 @@
-#include "processo.cpp"
+#include "../include/escalonador.hpp"
 
-class Escalonador
-{
-private:
-    
-public:
-    Escalonador(/* args */);
-    ~Escalonador();
+    //Escalonador();
+    //~Escalonador();
     void escalonar(std::vector<Processo>& processos)
     {
-        std::queue<Processo> processos_execucao;
         escalonar_prioridade(processos);
-        std::cout<<"Executando Processo:"<<processos.begin()->prioridade;
-        processos_execucao.push(*processos.begin());
-        processos.pop_back();
+        std::queue<Processo> processos_execucao;
+        std::cout<<"Executando Processo:"<<processos.front().prioridade;
+        while (!processos.empty()) {
+            processos_execucao.push(processos.front());
+            processos.erase(processos.begin()); 
+        }
     }
     void escalonar_prioridade(std::vector<Processo>& processos)
     {
@@ -23,6 +20,6 @@ public:
             }
         );
     }
-};
+
 
 
