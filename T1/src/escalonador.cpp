@@ -38,13 +38,20 @@
             ciclos_executados++;
 
             // I/O-Bound
-            if (processo_execucao.perfil == "IO-Bound" && ciclos_executados == 2) {
+            if (processo_execucao.perfil == "I/O-Bound" && ciclos_executados == 2) {
                 std::cout << "Processo " << processo_execucao.id << " bloqueado por I/O\n";
                 ciclos_executados = 0;
                 processos.push_back(processo_execucao);
                 return;
             }
-
+            // Memory-Bound
+            if (processo_execucao.perfil == "Memory-Bound") {
+                int* memoria = (int*)malloc(sizeof(int)*100);
+                for (int i = 0; i<100; i++){
+                    memoria[i] = i;
+                }
+                free(memoria);
+            }
             for (size_t i = 0; i < processos.size(); i++){
                 if (processos[i].prioridade > processo_execucao.prioridade){
                     processos.push_back(processo_execucao);
