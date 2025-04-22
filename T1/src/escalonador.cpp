@@ -1,67 +1,105 @@
 #include "../include/escalonador.hpp"
-
-    Escalonador::Escalonador(){
-
+    
+    Escalonador::Escalonador(std::deque<Processo*>&processos) : tempo_atual(0), processo_execucao(nullptr) {
+        processos_todos = processos;
     };
     Escalonador::~Escalonador(){
 
     };
-    void Escalonador::escalonar(std::deque<Processo>& processos)
-    {   
-        std::cout<<"Processo antes do escalonamento: "<<processos.front().id<<std::endl;
-        escalonar_prioridade(processos);
-        std::cout<<"Processo depois do escalonamento: "<<processos.front().id<<std::endl;
-        std::cout<<"Primeiro processo da fila: "<<processos.front().id<<std::endl;
-        while (!processos.empty()){
-            processo_execucao = processos.front();
-            processos.pop_front();
-            std::cout<<"Fila de execucao: Processo em execucao: "<<processo_execucao.id<<std::endl;
-            execucao_processo(processos);
+    void Escalonador::chegada(){
+        auto t = processos_todos.begin();
+        while ((t) != processos_todos.end()) {
+            if ((*t)->tempo_chegada == tempo_atual) {
+                processos_prontos.push_back(*(t));
+                t = processos_todos.erase(t);
+            } else {
+                t++;
+            }
         }
     }
-    void Escalonador::escalonar_prioridade(std::deque<Processo>& processos) //escalonamento por prioridade
-    {
-        std::sort(processos.begin(), processos.end(),
+    void Escalonador::aging(){
+        for (auto p : processos_prontos){
+            p->ciclos_espera++;
+            if (p->ciclos_espera >= tempo_atual) {
+                p->prioridade++; // incrementa a prioridade caso tenha atingido a cota de ciclos
+                p->ciclos_espera = 0; //reseta
+            }
+        }
+    }
+
+    void Escalonador::bloqueado(){
+        auto p = processos_bloqueados.begin();
+        while (p != processos_bloqueados.end()) {
+            p->second--; //decrementa o tempo de bloqueio do primeiro processo da lista
+            if (p->second == 0){
+                processos_prontos.push_back(p->first); // adiciona o processo bloqueado a fila de processos prontos
+                p = processos_bloqueados.erase(p); // .erase apaga o elemento apontado por it e faz it apontar pro proximo da lista
+            } else {
+                p++;
+            }
+        }
+    }
+    void Escalonador::escalonar() 
+    {   
+        if (processos_prontos.empty()){
+            return;
+        }
+        std::sort(processos_prontos.begin(), processos_prontos.end(),
             [](const Processo& p1, Processo& p2){
-                return p1.prioridade > p2.prioridade;
+                if(p1.prioridade != p2.prioridade) {
+                    return p1.prioridade > p2.prioridade;
+                }
+                return p1.tempo_chegada < p2.tempo_chegada;
             }
         );
-    }
-
-    void Escalonador::execucao_processo(std::deque<Processo>& processos)
-    {
-        int ciclos_executados = 0;
-        while (processo_execucao.tempo_estimado > 0) {
-            std::cout<<"processo execucao tempo estimado "<<processo_execucao.tempo_estimado<<std::endl;
-            sleep(1);
-            processo_execucao.tempo_estimado--;
-            ciclos_executados++;
-
-            // I/O-Bound
-            if (processo_execucao.perfil == "I/O-Bound" && ciclos_executados == 2) {
-                std::cout << "Processo " << processo_execucao.id << " bloqueado por I/O\n";
-                ciclos_executados = 0;
-                processos.push_back(processo_execucao);
-                return;
+        Processo* proximo = processos_prontos.front();
+        if (processo_execucao != proximo) {
+            if (processo_execucao != nullptr){
+                processos_prontos.push_back(processo_execucao);
             }
-            // Memory-Bound
-            if (processo_execucao.perfil == "Memory-Bound") {
-                int* memoria = (int*)malloc(sizeof(int)*100);
-                for (int i = 0; i<100; i++){
-                    memoria[i] = i;
-                }
-                free(memoria);
-            }
-            for (size_t i = 0; i < processos.size(); i++){
-                if (processos[i].prioridade > processo_execucao.prioridade){
-                    processos.push_back(processo_execucao);
-                    escalonar_prioridade(processos);
-                    processo_execucao = processos[0];
-                    return;
-                };
-            }
+            processo_execucao = proximo;
+            processos_prontos.erase(processos_prontos.begin());
         }
+
     }
+    void Escalonador::execucao()
+    {
+        if (processo_execucao == nullptr){
+            return;
+        }
+        processo_execucao->tempo_exec--;
+        processo_execucao->tempo_restante--;
+
+        // if (processo_execucao->perfil == MEMORY_BOUND) {
+        //     int* memoria = (int*)malloc(sizeof(int)*100);
+        //     for (int i = 0; i<100; i++){
+        //         memoria[i] = i;
+        //     }
+        //     free(memoria);
+        // }
+        if (processo_execucao->tempo_restante == 0){
+            delete processo_execucao;
+            processo_execucao = nullptr;
+        } else if (processo_execucao->tempo_exec <= 0) {
+            if (processo_execucao->perfil == IO_BOUND){
+                std::cout<<"Processo "<<processo_execucao->id<<" bloqueado por I/O"<<std::endl;
+            }
+            processos_bloqueados.push_back({processo_execucao, processo_execucao->tempo_block});
+            processo_execucao = nullptr;
+        }
 
 
+    }
+    void Escalonador::simulacao(){
+        while (!processos_todos.empty() || !processos_prontos.empty() || !processos_bloqueados.empty() || processo_execucao != nullptr) {
+            chegada();
+            aging();
+            bloqueado();
+            escalonar();
+            execucao();
+
+            tempo_atual--;
+        } 
+    }
+    
 

@@ -10,6 +10,7 @@ int main(){
     processos.push_back(processo2);
     processos.push_back(processo3);
     Escalonador escalonador;
+    Processo processo4 {5,3,"Memory-Bound",9};
     escalonador.escalonar(processos);
     // for (const auto& p : processos) {
     //     std::cout<<p.id<<std::endl;
