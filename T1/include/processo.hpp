@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <list>
 #include <utility>
+#include <set>
 enum Profile { CPU_BOUND, IO_BOUND, MEMORY_BOUND };
 
 struct Processo {

@@ -1,20 +1,17 @@
-#include "../include/escalonador.hpp"
+ #include "../include/escalonador.hpp"
 
-int main(){
+int main() {
+    std::deque<Processo*> processos = {
+        new Processo(1, 5, CPU_BOUND, 2, 0),   // CPU-bound, prioridade 2, chega em t=0
+        new Processo(2, 6, IO_BOUND, 1, 0),     // I/O-bound, prioridade 1, chega em t=2
+        new Processo(3, 4, MEMORY_BOUND, 3, 2), // Memory-bound, prioridade 3, chega em t=4
+        new Processo(4, 2, CPU_BOUND, 1, 5),   
+        new Processo(5, 3, IO_BOUND, 3, 9),
+        new Processo(6, 3, MEMORY_BOUND, 2, 14)
+    };
 
-    std::deque<Processo> processos;
-    Processo processo1 {1,5,"CPU-Bound",6};
-    Processo processo2 {2,2,"CPU-Bound",3};
-    Processo processo3 {3,7,"CPU-Bound",7};
-    processos.push_back(processo1);
-    processos.push_back(processo2);
-    processos.push_back(processo3);
-    Escalonador escalonador;
-    Processo processo4 {5,3,"Memory-Bound",9};
-    escalonador.escalonar(processos);
-    // for (const auto& p : processos) {
-    //     std::cout<<p.id<<std::endl;
-    // }
-    //processo1.processo_info();
+    Escalonador escalonador(processos);
+    escalonador.simulacao();
 
+    return 0;
 }

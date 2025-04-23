@@ -15,7 +15,7 @@ void Processo::reset_burst() {
                 tempo_block = 3;  // Bloqueio longo
                 break;
             case MEMORY_BOUND:
-                tempo_exec = 3; // Burst moderado
+                tempo_exec = tempo_estimado; // Burst moderado
                 tempo_block = 2;  // Bloqueio curto
                 break;
         }
