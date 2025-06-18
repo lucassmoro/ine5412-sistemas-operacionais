@@ -43,10 +43,10 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	cout << "Virtual Memory System Starting..." << endl;
-	cout << "Pages: " << npages << ", Frames: " << nframes << endl;
-	cout << "Algorithm: " << algorithm << ", Program: " << program << endl;
-	cout << "----------------------------------------" << endl;
+	// cout << "Virtual Memory System Starting..." << endl;
+	// cout << "Pages: " << npages << ", Frames: " << nframes << endl;
+	// cout << "Algorithm: " << algorithm << ", Program: " << program << endl;
+	// cout << "----------------------------------------" << endl;
 
 	// Configurar algoritmo de substituição
 	Page_Replacement::set_algorithm(string(algorithm));
@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
 		my_program.delta(virtmem, npages * Page_Table::PAGE_SIZE);
 	}
 
-	cout << "----------------------------------------" << endl;
+	// cout << "----------------------------------------" << endl;
 	Page_Replacement::print_statistics();
 
 	// Limpeza
