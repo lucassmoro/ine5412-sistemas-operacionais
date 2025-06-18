@@ -1,0 +1,7 @@
+main.o
+disk.o
+page_replacement.o
+page_table.o
+program.o
+virtmem
+virtual_disk.dat
