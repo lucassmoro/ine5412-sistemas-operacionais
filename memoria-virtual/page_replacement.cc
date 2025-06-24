@@ -95,14 +95,14 @@ int Page_Replacement::choose_frame_for_replacement(int nframes) {
 void Page_Replacement::load_page_from_disk(int page, int frame) {
     char* physmem = (char*) Page_Table::the_page_table->page_table_get_physmem(); //ponteiro pro endereco base da memoria fisica
     disk_ptr->read(page, physmem + frame * Page_Table::PAGE_SIZE); // le o disco passando no argumento o endereço base somado com o frame * o tamanho do frame
-    disk_reads++; // desloca o ponteiro
+    disk_reads++; // incrementa estatistica
 }
 
 // funcao para salvar página no disco
 void Page_Replacement::save_page_to_disk(int page, int frame) {
     char* physmem = (char*)Page_Table::the_page_table->page_table_get_physmem(); //ponteiro pro endereco base da memoria fisica
     disk_ptr->write(page, physmem + frame * Page_Table::PAGE_SIZE); // escreve no disco passando como argumento o enderço base + frame * o  tamanho do frame
-    disk_writes++; // desloca o ponteiro
+    disk_writes++; // incrementa estatistica
 }
 
 // funcao principal de tratamento de page fault
