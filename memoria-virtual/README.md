@@ -1,38 +1,35 @@
-# Trabalho Prático 1
-## Algoritmo de Escalonamento com Prioridades Dinâmicas e Aging
+# Memória Virtual
 
-## Objetivo
-O objetivo deste trabalho é implementar um algoritmo de escalonamento de processos
-baseado em prioridades dinâmicas com mecanismo de aging para evitar a postergação
-indefinida de processos. O algoritmo deverá simular um ambiente multitarefa, considerando
-diferentes perfis de processos: CPU-bound, I/O-bound e Memory-bound.
+O presente trabalho tem por objetivo praticar o conceito de memória virtual, aprender a
+mecânica do código dos sistemas operacionais modernos no tratamento de interrupções/exceções e
+desenvolver capacidade de avaliação quantitativa a nível de sistemas. Esse trabalho tem como base
+o trabalho do Prof. Douglas Thain da Universidade de Notre Dame, EUA, disponível em
+https://github.com/dthain/opsys-sp22/blob/main/project5/index.md.
 
-## Descrição
-O seu grupo deverá desenvolver um simulador que implemente:
-- Escalonamento preemptivo baseado em prioridades dinâmicas;
-- Mecanismo de aging, em que processos que aguardam muito tempo na fila de prontos
-têm sua prioridade aumentada gradualmente;
-- Suporte a três perfis de processos:
-  - CPU-bound: requerem muito tempo de CPU e fazem pouca ou nenhuma E/S.
-  - I/O-bound: executam operações de entrada/saída frequentemente, com pouco
-uso contínuo da CPU.
-  - Memory-bound: fazem uso intensivo de memória (simulação aceitável com
-operações de alocação e liberação de memória, por exemplo).
+Neste trabalho você deverá criar um sistema simples mas funcional de memória virtual
+paginada sob demanda. Embora sabemos que a memória virtual é implementada dentro do código
+de sistemas operacionais (a nível de kernel), essa técnica também pode ser implementada em nível
+de usuário. Isso é exatamente a forma como máquinas virtuais modernas fazem. Desta forma, não
+precisamos escrever código em nível de kernel, o que é geralmente difícil de depurar, e nos dá a
+possibilidade de aprender e praticar conceitos avançados.
 
-## Requisitos da Implementação
-1. O simulador deve aceitar uma lista de processos como entrada, com informações como:
-  - Identificador
-  - Tempo estimado de execução
-  - Perfil (CPU-bound, I/O-bound, Memory-bound)
-  - Prioridade inicial
+A Figura abaixo apresenta os principais componentes do sistema de memória virtual deste trabalho:
 
-2. O algoritmo de escalonamento deve:
-  - Escolher o processo de maior prioridade (com desempate por ordem de
-chegada);
-  - Suportar preempção caso um processo de maior prioridade fique pronto;
-  - Aplicar aging para promover processos que estão esperando por tempo
-excessivo.
+Um código base em C++ está disponível juntamente com essa descrição. Esse código base
+implementa a tabela de páginas virtual e um disco virtual. A tabela de páginas virtual cria uma
+pequena memória virtual e física, juntamente com os métodos para atualizar as entradas na tabela de
+página e os bits de proteção para cada página. Quando uma aplicação usar a memória virtual não
+mapeada, faltas de páginas (page faults) serão geradas e um tratador será chamado para realizar as
+atividades associadas.
 
-3. O aging pode ser simulado, por exemplo, aumentando a prioridade do processo a cada
-n ciclos sem execução.
+Seu trabalho será implementar esse tratador de faltas de páginas e
+identificar a correta lista de ações a serem realizadas: atualizar a tabela de páginas, mover
+dados de volta para o disco ou trazer dados do disco de/para a memória física, além de
+implementar algortimos de substituição de páginas.
+
+Uma vez que o sistema esteja funcional, seu trabalho será avaliar o desempenho dos
+algoritmos de substituição de páginas usando 4 programas simples que são disponibilizados
+juntamente com o código, sendo que tais programas têm diferentes demandas em relação ao
+tamanho de memória utilizada. Você deverá escrever um breve relatório explicando os
+experimentos, os resultados obtidos e as conclusões para cada programa.
 
