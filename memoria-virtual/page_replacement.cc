@@ -93,16 +93,25 @@ int Page_Replacement::choose_frame_for_replacement(int nframes) {
 
 // funcao para carregar página do disco
 void Page_Replacement::load_page_from_disk(int page, int frame) {
-    char* physmem = (char*) Page_Table::the_page_table->page_table_get_physmem(); //ponteiro pro endereco base da memoria fisica
+    // ponteiro da base da mem fisica, recebe do ponteiro estatico (the_page_table) que acessa um getter
+    char* physmem = (char*) Page_Table::the_page_table->page_table_get_physmem(); 
     disk_ptr->read(page, physmem + frame * Page_Table::PAGE_SIZE); // le o disco passando no argumento o endereço base somado com o frame * o tamanho do frame
+<<<<<<< HEAD
     disk_reads++; // incrementa estatistica
+=======
+    disk_reads++; // incrementa a estatistica
+>>>>>>> d66d4f8 (readme memoria-virtual)
 }
 
 // funcao para salvar página no disco
 void Page_Replacement::save_page_to_disk(int page, int frame) {
     char* physmem = (char*)Page_Table::the_page_table->page_table_get_physmem(); //ponteiro pro endereco base da memoria fisica
     disk_ptr->write(page, physmem + frame * Page_Table::PAGE_SIZE); // escreve no disco passando como argumento o enderço base + frame * o  tamanho do frame
+<<<<<<< HEAD
     disk_writes++; // incrementa estatistica
+=======
+    disk_writes++; // incrementa a estatistica
+>>>>>>> d66d4f8 (readme memoria-virtual)
 }
 
 // funcao principal de tratamento de page fault
