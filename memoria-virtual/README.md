@@ -15,7 +15,7 @@ possibilidade de aprender e praticar conceitos avançados.
 
 A Figura abaixo apresenta os principais componentes do sistema de memória virtual deste trabalho:
 
-![](memoria-virtual/image.png)
+![](image.png)
 
 Um código base em C++ está disponível juntamente com essa descrição. Esse código base
 implementa a tabela de páginas virtual e um disco virtual. A tabela de páginas virtual cria uma
