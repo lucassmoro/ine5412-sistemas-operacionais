@@ -1,2 +1,7 @@
 main.cpp
 main
+main.o
+executor.o
+processo.o
+escalonador.o
+executor
